@@ -2,17 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Prediction Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Risk Assessment Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .result-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .result-box {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            color: var(--primary-color);
+        }
+
+        .result-description {
+            color: #666;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--text-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <form>
-        <h2>Prediction Result</h2>
-        <p style="font-size: 18px; margin-top: 20px; text-align: center;">
-            <strong>{{ result }}</strong>
-        </p>
-        <a href="/" style="margin-top: 30px;">🔁 Predict Again</a>
-    </form>
+    <div class="container">
+        <div class="result-box">
+            <div class="result-icon">
+                {% if result == 'Cancer Detected' %}
+                    ⚠️
+                {% else %}
+                    ✅
+                {% endif %}
+            </div>
+            
+            <h2>Assessment Result</h2>
+            
+            <div class="result-text">
+                {{ result }}
+            </div>
+            
+            <div class="result-description">
+                {% if result == 'Cancer Detected' %}
+                    Based on the provided information, our model has detected potential cancer risk factors. 
+                    Please note that this is not a diagnosis, but rather a risk assessment. 
+                    We strongly recommend consulting with a healthcare professional for a proper medical evaluation.
+                {% else %}
+                    Based on the provided information, our model has not detected significant cancer risk factors. 
+                    However, it's important to maintain regular health check-ups and consult with healthcare 
+                    professionals for personalized medical advice.
+                {% endif %}
+            </div>
+            
+            <div class="action-buttons">
+                <a href="/" class="btn btn-primary">
+                    🔄 New Assessment
+                </a>
+                <a href="https://www.cancer.gov/about-cancer/causes-prevention/risk" 
+                   target="_blank" 
+                   class="btn btn-secondary">
+                    📚 Learn More
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
-

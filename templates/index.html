@@ -1,40 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Cancer Diagnosis Predictor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Risk Assessment Tool</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Cancer Diagnosis Prediction Form</h2>
-    <form action="/predict" method="post">
-        <label for="age">Age (20-80):</label>
-        <input type="number" name="age" id="age" min="20" max="80" placeholder="Enter age (20–80)" required><br>
+    <div class="container">
+        <form action="/predict" method="post" id="predictionForm">
+            <h2>Cancer Risk Assessment Tool</h2>
+            <div class="form-description">
+                Please fill in all fields accurately for the best prediction results.
+            </div>
 
-        <label for="gender">Gender:</label>
-        <select name="gender" id="gender" required>
-            <option value="1">Male</option>
-            <option value="0">Female</option>
-        </select><br>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="range" name="age" id="age" min="20" max="80" value="50" oninput="updateAgeValue(this.value)" required>
+                <span class="range-value" id="ageValue">50 years</span>
+            </div>
 
-        <label for="bmi">BMI (15 - 40):</label>
-        <input type="number" step="0.01" name="bmi" id="bmi" min="15" max="40" placeholder="e.g., 27.5" required><br>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="1" required> Male
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="gender" value="0"> Female
+                    </label>
+                </div>
+            </div>
 
-        <label for="smoking">Smoking Status (0 = No, 1 = Yes):</label>
-        <input type="number" name="smoking" id="smoking" min="0" max="1" placeholder="0 or 1" required><br>
+            <div class="form-group">
+                <label for="bmi">BMI (Body Mass Index)</label>
+                <input type="number" step="0.1" name="bmi" id="bmi" min="15" max="40" 
+                       placeholder="Enter BMI (15-40)" required>
+                <div class="input-help">Normal BMI range is 18.5-24.9</div>
+            </div>
 
-        <label for="genetic_risk">Genetic Risk (0 - 2):</label>
-        <input type="number" name="genetic_risk" id="genetic_risk" min="0" max="2" placeholder="0, 1 or 2" required><br>
+            <div class="form-group">
+                <label for="smoking">Smoking Status</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="smoking" value="1" required> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="smoking" value="0"> No
+                    </label>
+                </div>
+            </div>
 
-        <label for="physical_activity">Physical Activity (0.0 - 10.0 hrs/week):</label>
-        <input type="number" step="0.01" name="physical_activity" id="physical_activity" min="0" max="10" placeholder="e.g., 5.0" required><br>
+            <div class="form-group">
+                <label for="genetic_risk">Genetic Risk Level</label>
+                <select name="genetic_risk" id="genetic_risk" required>
+                    <option value="">Select risk level</option>
+                    <option value="0">Low Risk</option>
+                    <option value="1">Medium Risk</option>
+                    <option value="2">High Risk</option>
+                </select>
+            </div>
 
-        <label for="alcohol_intake">Alcohol Intake (0.0 - 5.0 units/week):</label>
-        <input type="number" step="0.01" name="alcohol_intake" id="alcohol_intake" min="0" max="5" placeholder="e.g., 2.4" required><br>
+            <div class="form-group">
+                <label for="physical_activity">Physical Activity (hours/week)</label>
+                <input type="range" name="physical_activity" id="physical_activity" 
+                       min="0" max="10" step="0.5" value="5" 
+                       oninput="updateActivityValue(this.value)" required>
+                <span class="range-value" id="activityValue">5.0 hrs/week</span>
+            </div>
 
-        <label for="cancer_history">Cancer History (0 = No, 1 = Yes):</label>
-        <input type="number" name="cancer_history" id="cancer_history" min="0" max="1" placeholder="0 or 1" required><br><br>
+            <div class="form-group">
+                <label for="alcohol_intake">Alcohol Intake (units/week)</label>
+                <input type="range" name="alcohol_intake" id="alcohol_intake" 
+                       min="0" max="5" step="0.1" value="2" 
+                       oninput="updateAlcoholValue(this.value)" required>
+                <span class="range-value" id="alcoholValue">2.0 units/week</span>
+            </div>
 
-        <input type="submit" value="Predict">
-    </form>
+            <div class="form-group">
+                <label for="cancer_history">Family History of Cancer</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="cancer_history" value="1" required> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="cancer_history" value="0"> No
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span class="btn-text">Analyze Risk</span>
+                <span class="btn-icon">➜</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function updateAgeValue(val) {
+            document.getElementById('ageValue').textContent = val + ' years';
+        }
+        
+        function updateActivityValue(val) {
+            document.getElementById('activityValue').textContent = val + ' hrs/week';
+        }
+        
+        function updateAlcoholValue(val) {
+            document.getElementById('alcoholValue').textContent = val + ' units/week';
+        }
+
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.querySelector('.btn-text').textContent = 'Analyzing...';
+        });
+    </script>
 </body>
 </html>
