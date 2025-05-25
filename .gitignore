@@ -1,0 +1,9 @@
+# Jupyter Notebook files
+*.ipynb
+
+# Python virtual environment
+cancer/
+
+# CSV files (e.g., datasets)
+*.csv
+
